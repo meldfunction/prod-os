@@ -1,0 +1,20 @@
+{
+  "name": "test-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@google-cloud/bigquery": "^1.0.0",
+    "react": "^16.3.0",
+    "react-autosuggest": "^9.3.4",
+    "react-debounce-input": "^3.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.1.1",
+    "axios": "^0.16.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
