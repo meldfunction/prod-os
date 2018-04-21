@@ -9,26 +9,35 @@ const PRODUCT_LOOKUP_API =
    "https://us-central1-prod-os.cloudfunctions.net/function-1?keyword=";
 
 function getMatchingData(value) {
-  const escapedValue = escapeRegexCharacters(value.trim());
+  //const escapedValue = escapeRegexCharacters(value.trim());
+  //
+  // if (escapedValue === '') {
+  //   return [];
+  // }
 
-  if (escapedValue === '') {
-    return [];
-  }
+  // const regex = new RegExp('^' + escapedValue, 'i');
 
-  const regex = new RegExp('^' + escapedValue, 'i');
-  axios.get(PRODUCT_LOOKUP_API+value, value).then((response, error) => {
-           //console.log(response);
-           this.setState({ _this: response.data });
-         }).catch( (error) => {
-    console.log(error);
-  });
+//
+//   axios.get(PRODUCT_LOOKUP_API value).then((response, error) => {
+//     console.log(response.data);
+//     this.setState({ productData: response.data, isProductLoading: false });
+// })
+  const queryString=`${PRODUCT_LOOKUP_API}${value}`;
+  console.log(queryString);
+  let newData=[];
+  axios.get(`${queryString}`)
+      .then(res => {
+        // const persons = res.data;
+        console.log("before i have data: "+newData);
+        newData=res.data;
+      })
+  console.log("outside axios call: "+newData);
+  return newData.filter(newData => newData.name);
 
-  return autocompleteData.filter(autocompleteData => regex.test(autocompleteData.name)).bind(this);
 }
-
-function escapeRegexCharacters(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+// function escapeRegexCharacters(str) {
+//   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+// }
 
 function randomDelay() {
   return 300 + Math.random() * 1000;
@@ -51,7 +60,6 @@ class App extends React.Component {
     this.state = {
       value: '',
       suggestions: [],
-      autocompleteData: [],
       isLoading: false
     };
   }
@@ -61,20 +69,35 @@ class App extends React.Component {
       isLoading: true
     });
 
+    const queryString=`${PRODUCT_LOOKUP_API}${value}`;
+    axios.get(`${queryString}`)
+        .then(res => {
+          // const persons = res.data;
+          console.log("just called axios: "+res.data);
+          this.setState({
+            suggestions: res.data.filter(data => data.name),
+            isLoading:false
+          });
+        })
+
+
+    // console.log("outside axios call: "+newData);
+    // return newData.filter(newData => newData.name);
+
     // Fake an AJAX call
-    setTimeout(() => {
-      if (value === this.state.value) {
-        this.setState({
-          isLoading: false,
-          suggestions: getMatchingData(value)
-        });
-      } else {
-        // Ignore suggestions if input value has changed
-        /*this.setState({
-          isLoading: false
-        });*/
-      }
-    }, 200/*randomDelay()*/);
+    // setTimeout(() => {
+    //   if (value === this.state.value) {
+    //     this.setState({
+    //       isLoading: false,
+    //       suggestions: getMatchingData(value)
+    //     });
+    //   } else {
+    //     // Ignore suggestions if input value has changed
+    //     /*this.setState({
+    //       isLoading: false
+    //     });*/
+    //   }
+    // }, 200/*randomDelay()*/);
   }
 
   onChange = (event, { newValue }) => {
@@ -94,7 +117,8 @@ class App extends React.Component {
   };
 
   render() {
-    const { value, suggestions, autocompleteData, isLoading } = this.state;
+    const { value, suggestions, isLoading } = this.state;
+    console.log(this.state.suggestions);
     const inputProps = {
       placeholder: "Type 'iPhone'",
       value,
@@ -110,7 +134,6 @@ class App extends React.Component {
         </div>
         <Autosuggest
           suggestions={suggestions}
-          autocompleteData={autocompleteData}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
           onSuggestionsClearRequested={this.onSuggestionsClearRequested}
           getSuggestionValue={getSuggestionValue}
