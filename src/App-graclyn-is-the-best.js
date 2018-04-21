@@ -128,8 +128,7 @@ class App extends React.Component {
 
     return (
 
-      <div className="centerEverything">
-      <h1>Search with the Force</h1>
+      <div>
         <div className="status">
           <strong>Status:</strong> {status}
         </div>
