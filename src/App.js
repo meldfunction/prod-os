@@ -73,7 +73,6 @@ class App extends React.Component {
     axios.get(`${queryString}`)
         .then(res => {
           // const persons = res.data;
-          console.log("just called axios: "+res.data);
           this.setState({
             suggestions: res.data.filter(data => data.name),
             isLoading:false
@@ -118,7 +117,6 @@ class App extends React.Component {
 
   render() {
     const { value, suggestions, isLoading } = this.state;
-    console.log(this.state.suggestions);
     const inputProps = {
       placeholder: "Type 'iPhone'",
       value,
@@ -129,7 +127,7 @@ class App extends React.Component {
     return (
 
       <div className="centerEverything">
-      <h1>Search with the Force</h1>
+      <h1>ProdFinder</h1>
         <div className="status">
           <strong>Status:</strong> {status}
         </div>
